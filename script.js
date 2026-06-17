@@ -7,9 +7,9 @@ let products = [
     // ===== МОРЕПРОДУКТЫ ===== 
     { 
     id: 1,  // ВАЖНО: следующий номер!
-    name: "Валерено очко товар",
+    name: "Краб размер S",
     desc: "Описание",
-    price: 2500,
+    price: 2000,
     unit: "кг",
     category: "seafood",
     mainImage: "img/krab.jpg",
