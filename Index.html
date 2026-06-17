@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Морской Улов - Морепродукты, Рыба, Мясо</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- Шапка сайта -->
+<div class="header">
+    <div class="header-content">
+        <div class="logo">
+            🦞 <span>Бухаем </span>
+        </div>
+        <div class="header-buttons">
+            <button class="admin-btn" id="openAdminBtn">⚙️ Админ-панель</button>
+            <button class="cart-btn" id="openCartBtn">🛒 Корзина (<span id="cartCount">0</span>)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Герой-секция (приветствие) -->
+<section class="hero">
+    <h1>🌊 Свежие морепродукты, рыба и мясо с доставкой</h1>
+    <p>Краб, креветки, гребешок, осьминог, мидии, отборная рыба и фермерское мясо</p>
+</section>
+
+<!-- Основной контент -->
+<div class="container">
+    <!-- Вкладки категорий -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="seafood">🦐 Морепродукты</button>
+        <button class="tab-btn" data-tab="fish">🐟 Рыба</button>
+        <button class="tab-btn" data-tab="meat">🥩 Мясо</button>
+    </div>
+
+    <!-- Контент вкладки "Морепродукты" -->
+    <div id="tab-seafood" class="tab-content active">
+        <h2 class="section-title">🦞 Дары моря</h2>
+        <div class="products-grid" id="seafoodGrid"></div>
+    </div>
+
+    <!-- Контент вкладки "Рыба" -->
+    <div id="tab-fish" class="tab-content">
+        <h2 class="section-title">🐠 Свежая рыба</h2>
+        <div class="products-grid" id="fishGrid"></div>
+    </div>
+
+    <!-- Контент вкладки "Мясо" -->
+    <div id="tab-meat" class="tab-content">
+        <h2 class="section-title">🥩 Фермерское мясо</h2>
+        <div class="products-grid" id="meatGrid"></div>
+    </div>
+</div>
+
+<!-- Подвал -->
+<div class="footer">
+    <p>🌊 Свежесть с моря — доставка за 24 часа</p>
+    <p>🥩 Фермерское мясо — только от проверенных поставщиков</p>
+    <p>📞 +7 (914) 738-44-28 | г. Москва, ул. Морская, Валера хуй сосал 15</p>
+    <p>© 2025 Морской Улов — дары океана и фермерские продукты для вас</p>
+</div>
+
+<!-- Модальное окно корзины -->
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🛒 Корзина</h2>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <div id="cartItemsList"></div>
+        <div id="cartTotal" class="cart-total"></div>
+        <div class="order-form">
+            <input type="text" id="userName" placeholder="Ваше имя">
+            <input type="tel" id="userPhone" placeholder="Номер телефона">
+            <input type="text" id="userAddress" placeholder="Адрес доставки">
+            <button id="submitOrderBtn" class="submit-order">✅ Оформить заказ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно админ-панели -->
+<div id="adminPanel" class="admin-panel">
+    <div class="admin-content">
+        <div class="admin-header">
+            <h2>⚙️ Админ-панель: управление товарами</h2>
+            <button class="close-admin" id="closeAdminBtn">&times;</button>
+        </div>
+        <div id="adminProductsList"></div>
+        <button class="add-product-btn" id="addProductBtn">➕ Добавить новый товар</button>
+        <p style="font-size: 0.8rem; color: #666; margin-top: 15px; text-align: center;">⚠️ Все изменения сохраняются автоматически в вашем браузере</p>
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>
