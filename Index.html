@@ -58,7 +58,7 @@
 <div class="footer">
     <p>🌊 Свежесть с моря — доставка от 2 часов</p>
     <p>📞 +7 (914) 738-44-28 | работаем по г.Находка и при ближайшим городам</p>
-    <p>© 2025 Морской Улов — дары океана и морепродукты для вас</p>
+    <p>© 2025 Морской Улов — дары океана и море продукты для вас</p>
 </div>
 
 <!-- Модальное окно корзины -->
@@ -70,11 +70,13 @@
         </div>
         <div id="cartItemsList"></div>
         <div id="cartTotal" class="cart-total"></div>
+        
+        <!-- ФОРМА ЗАКАЗА -->
         <div class="order-form">
             <input type="text" id="userName" placeholder="Ваше имя">
             <input type="tel" id="userPhone" placeholder="Номер телефона">
             <input type="text" id="userAddress" placeholder="Адрес доставки">
-            <button id="submitOrderBtn" class="submit-order">✅ Оформить заказ</button>
+            <button id="submitOrderBtn" class="submit-order" onclick="submitOrder()">✅ Оформить заказ</button>
         </div>
     </div>
 </div>
