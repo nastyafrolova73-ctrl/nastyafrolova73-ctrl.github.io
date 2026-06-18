@@ -179,7 +179,7 @@ function submitTelegram() {
     const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8"; // ← ТОКЕН БОТА
     const chatId = "-1004379777197"; // ← ТВОЙ ID В TELEGRAM
 
-    const url = `https://api.telegram.ph/bot${botToken}/sendMessage`;
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
     
     fetch(url, {
         method: 'POST',
