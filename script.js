@@ -133,71 +133,99 @@ function renderCartModal() {
         btn.addEventListener("click", () => removeFromCart(parseInt(btn.dataset.id)));
     });
 }
-
 // ==================== ОФОРМЛЕНИЕ ЗАКАЗА ====================
-function submitOrder() {
-    console.log("🟢 Функция submitOrder() вызвана!"); // ← проверка в консоли
 
-    // Получаем данные из формы
-    const name = document.getElementById("userName");
-    const phone = document.getElementById("userPhone");
-    const address = document.getElementById("userAddress");
+// Функция для сбора данных заказа
+function getOrderData() {
+    const name = document.getElementById("userName").value.trim();
+    const phone = document.getElementById("userPhone").value.trim();
+    const address = document.getElementById("userAddress").value.trim();
 
-    // Проверка: существуют ли поля?
     if (!name || !phone || !address) {
-        console.error("❌ Одно из полей не найдено в HTML!");
-        alert("Ошибка: проверьте ID полей в форме");
-        return;
-    }
-
-    const nameValue = name.value.trim();
-    const phoneValue = phone.value.trim();
-    const addressValue = address.value.trim();
-
-    console.log("📝 Данные формы:", { nameValue, phoneValue, addressValue });
-
-    // Валидация
-    if (!nameValue || !phoneValue || !addressValue) {
         showMessage("❌ Заполните все поля!");
-        return;
+        return null;
     }
-
     if (cart.length === 0) {
         showMessage("🛑 Корзина пуста!");
-        return;
+        return null;
     }
 
-    // Собираем заказ
     const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
     
-    // Формируем сообщение
-    let message = "🦞 НОВЫЙ ЗАКАЗ!%0A%0A";
-    message += `👤 Имя: ${nameValue}%0A`;
-    message += `📞 Телефон: ${phoneValue}%0A`;
-    message += `🏠 Адрес: ${addressValue}%0A`;
-    message += `📅 Время: ${new Date().toLocaleString()}%0A%0A`;
-    message += `📦 Товары:%0A`;
+    let orderText = "🦞 НОВЫЙ ЗАКАЗ!\n\n";
+    orderText += `👤 Имя: ${name}\n`;
+    orderText += `📞 Телефон: ${phone}\n`;
+    orderText += `🏠 Адрес: ${address}\n`;
+    orderText += `📅 Время: ${new Date().toLocaleString()}\n\n`;
+    orderText += `📦 Товары:\n`;
     
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
-        message += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽%0A`;
+        orderText += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽\n`;
     });
     
-    message += `%0A💰 ИТОГО: ${total} ₽`;
+    orderText += `\n💰 ИТОГО: ${total} ₽`;
 
-    // ТВОЙ НОМЕР ТЕЛЕФОНА (БЕЗ +)
-    const yourPhone = "79147384428"; // ← СЮДА ВСТАВЬ СВОЙ НОМЕР
+    return { name, phone, address, total, orderText };
+}
 
-    // Создаём ссылку на WhatsApp
-    const whatsappUrl = `https://wa.me/${yourPhone}?text=${message}`;
+// ОТПРАВКА В WHATSAPP
+function submitWhatsApp() {
+    console.log("🟢 WhatsApp кнопка нажата!");
+    const data = getOrderData();
+    if (!data) return;
+
+    const encodedMessage = encodeURIComponent(data.orderText);
+    const yourPhone = "79147384428"; // ← ЗАМЕНИ НА СВОЙ НОМЕР!
+    const whatsappUrl = `https://wa.me/${yourPhone}?text=${encodedMessage}`;
     
-    console.log("🔗 Ссылка WhatsApp:", whatsappUrl);
-    
-    // Открываем WhatsApp
     window.open(whatsappUrl, '_blank');
     
-    // Очищаем корзину
-    showMessage(`✅ ${nameValue}, заказ отправлен в WhatsApp!`);
+    showMessage(`✅ ${data.name}, заказ отправлен в WhatsApp!`);
+    clearCartAndForm();
+}
+
+// ОТПРАВКА В TELEGRAM
+function submitTelegram() {
+    console.log("🟢 Telegram кнопка нажата!");
+    const data = getOrderData();
+    if (!data) return;
+
+    // ⚙️ НАСТРОЙКИ TELEGRAM (ЗАМЕНИ НА СВОИ!)
+    const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8"; // ← ТОКЕН БОТА
+    const chatId = "865473383"; // ← ТВОЙ ID В TELEGRAM
+
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            chat_id: chatId,
+            text: data.orderText,
+            parse_mode: 'Markdown'
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.ok) {
+            showMessage(`✅ ${data.name}, заказ отправлен в Telegram!`);
+            clearCartAndForm();
+        } else {
+            showMessage(`❌ Ошибка: ${result.description}`);
+            console.error('Ошибка Telegram:', result);
+        }
+    })
+    .catch(error => {
+        showMessage(`❌ Ошибка отправки в Telegram!`);
+        console.error('Ошибка:', error);
+    });
+}
+
+// Очистка корзины и формы
+function clearCartAndForm() {
     cart = [];
     saveCart();
     renderCartModal();
