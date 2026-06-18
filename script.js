@@ -134,6 +134,7 @@ function renderCartModal() {
     });
 }
 
+// Альтернативная версия (открывает WhatsApp с готовым сообщением)
 function submitOrder() {
     const name = document.getElementById("userName").value.trim();
     const phone = document.getElementById("userPhone").value.trim();
@@ -149,9 +150,29 @@ function submitOrder() {
     }
 
     const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    console.log("НОВЫЙ ЗАКАЗ:", { name, phone, address, cart, total });
-    showMessage(`🎉 ${name}, заказ принят! Сумма: ${total.toLocaleString()} ₽`);
     
+    let message = "🦞 НОВЫЙ ЗАКАЗ!\n\n";
+    message += `👤 Имя: ${name}\n`;
+    message += `📞 Телефон: ${phone}\n`;
+    message += `🏠 Адрес: ${address}\n`;
+    message += `📅 Время: ${new Date().toLocaleString()}\n\n`;
+    message += `📦 Товары в заказе:\n`;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        message += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽\n`;
+    });
+    
+    message += `\n💰 ИТОГО: ${total} ₽`;
+
+    // Кодируем текст для URL (заменяем пробелы и спецсимволы)
+    const encodedMessage = encodeURIComponent(message);
+    const yourPhone = "79147384428"; // ← ТВОЙ НОМЕР
+    
+    // Открываем WhatsApp
+    window.location.href = `https://wa.me/${yourPhone}?text=${encodedMessage}`;
+    
+    showMessage(`✅ ${name}, заказ отправлен в WhatsApp!`);
     cart = [];
     saveCart();
     renderCartModal();
