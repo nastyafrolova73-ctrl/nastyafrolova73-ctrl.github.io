@@ -134,45 +134,70 @@ function renderCartModal() {
     });
 }
 
-// Альтернативная версия (открывает WhatsApp с готовым сообщением)
+// ==================== ОФОРМЛЕНИЕ ЗАКАЗА ====================
 function submitOrder() {
-    const name = document.getElementById("userName").value.trim();
-    const phone = document.getElementById("userPhone").value.trim();
-    const address = document.getElementById("userAddress").value.trim();
+    console.log("🟢 Функция submitOrder() вызвана!"); // ← проверка в консоли
 
+    // Получаем данные из формы
+    const name = document.getElementById("userName");
+    const phone = document.getElementById("userPhone");
+    const address = document.getElementById("userAddress");
+
+    // Проверка: существуют ли поля?
     if (!name || !phone || !address) {
+        console.error("❌ Одно из полей не найдено в HTML!");
+        alert("Ошибка: проверьте ID полей в форме");
+        return;
+    }
+
+    const nameValue = name.value.trim();
+    const phoneValue = phone.value.trim();
+    const addressValue = address.value.trim();
+
+    console.log("📝 Данные формы:", { nameValue, phoneValue, addressValue });
+
+    // Валидация
+    if (!nameValue || !phoneValue || !addressValue) {
         showMessage("❌ Заполните все поля!");
         return;
     }
+
     if (cart.length === 0) {
         showMessage("🛑 Корзина пуста!");
         return;
     }
 
+    // Собираем заказ
     const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
     
-    let message = "🦞 НОВЫЙ ЗАКАЗ!\n\n";
-    message += `👤 Имя: ${name}\n`;
-    message += `📞 Телефон: ${phone}\n`;
-    message += `🏠 Адрес: ${address}\n`;
-    message += `📅 Время: ${new Date().toLocaleString()}\n\n`;
-    message += `📦 Товары в заказе:\n`;
+    // Формируем сообщение
+    let message = "🦞 НОВЫЙ ЗАКАЗ!%0A%0A";
+    message += `👤 Имя: ${nameValue}%0A`;
+    message += `📞 Телефон: ${phoneValue}%0A`;
+    message += `🏠 Адрес: ${addressValue}%0A`;
+    message += `📅 Время: ${new Date().toLocaleString()}%0A%0A`;
+    message += `📦 Товары:%0A`;
     
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
-        message += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽\n`;
+        message += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽%0A`;
     });
     
-    message += `\n💰 ИТОГО: ${total} ₽`;
+    message += `%0A💰 ИТОГО: ${total} ₽`;
 
-    // Кодируем текст для URL (заменяем пробелы и спецсимволы)
-    const encodedMessage = encodeURIComponent(message);
-    const yourPhone = "79147384428"; // ← ТВОЙ НОМЕР
+    // ТВОЙ НОМЕР ТЕЛЕФОНА (БЕЗ +)
+    const yourPhone = "79147384428"; // ← СЮДА ВСТАВЬ СВОЙ НОМЕР
+
+    // Создаём ссылку на WhatsApp
+    const whatsappUrl = `https://wa.me/${yourPhone}?text=${message}`;
+    
+    console.log("🔗 Ссылка WhatsApp:", whatsappUrl);
     
     // Открываем WhatsApp
-    window.location.href = `https://wa.me/${yourPhone}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
     
-    showMessage(`✅ ${name}, заказ отправлен в WhatsApp!`);
+    // Очищаем корзину
+    showMessage(`✅ ${nameValue}, заказ отправлен в WhatsApp!`);
     cart = [];
     saveCart();
     renderCartModal();
