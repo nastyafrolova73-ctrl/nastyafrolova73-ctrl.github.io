@@ -169,22 +169,6 @@ function getOrderData() {
     return { name, phone, address, total, orderText };
 }
 
-// ОТПРАВКА В WHATSAPP
-function submitWhatsApp() {
-    console.log("🟢 WhatsApp кнопка нажата!");
-    const data = getOrderData();
-    if (!data) return;
-
-    const encodedMessage = encodeURIComponent(data.orderText);
-    const yourPhone = "79147384428"; // ← ЗАМЕНИ НА СВОЙ НОМЕР!
-    const whatsappUrl = `https://wa.me/${yourPhone}?text=${encodedMessage}`;
-    
-    window.open(whatsappUrl, '_blank');
-    
-    showMessage(`✅ ${data.name}, заказ отправлен в WhatsApp!`);
-    clearCartAndForm();
-}
-
 // ОТПРАВКА В TELEGRAM
 function submitTelegram() {
     console.log("🟢 Telegram кнопка нажата!");
