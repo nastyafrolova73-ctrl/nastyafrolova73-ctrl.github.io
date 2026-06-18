@@ -71,12 +71,16 @@
         <div id="cartItemsList"></div>
         <div id="cartTotal" class="cart-total"></div>
         
-        <!-- ФОРМА ЗАКАЗА -->
         <div class="order-form">
             <input type="text" id="userName" placeholder="Ваше имя">
             <input type="tel" id="userPhone" placeholder="Номер телефона">
             <input type="text" id="userAddress" placeholder="Адрес доставки">
-            <button id="submitOrderBtn" class="submit-order" onclick="submitOrder()">✅ Оформить заказ</button>
+            
+            <!-- ДВЕ КНОПКИ (onclick-версия) -->
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button class="submit-order" style="flex: 1; min-width: 120px; background: #25D366; color: white; border: none; padding: 14px; border-radius: 50px; font-weight: bold; cursor: pointer;" onclick="submitWhatsApp()">💚 WhatsApp</button>
+                <button class="submit-order" style="flex: 1; min-width: 120px; background: #0088cc; color: white; border: none; padding: 14px; border-radius: 50px; font-weight: bold; cursor: pointer;" onclick="submitTelegram()">✈️ Telegram</button>
+            </div>
         </div>
     </div>
 </div>
