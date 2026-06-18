@@ -193,7 +193,7 @@ function submitTelegram() {
 
     // ⚙️ НАСТРОЙКИ TELEGRAM (ЗАМЕНИ НА СВОИ!)
     const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8"; // ← ТОКЕН БОТА
-    const chatId = "865473383"; // ← ТВОЙ ID В TELEGRAM
+    const chatId = "-1004379777197"; // ← ТВОЙ ID В TELEGRAM
 
     const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
     
