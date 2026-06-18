@@ -399,6 +399,7 @@ body {
     cursor: pointer;
 }
 
+
 /* ===== УВЕДОМЛЕНИЯ ===== */
 .toast {
     position: fixed;
@@ -471,4 +472,24 @@ body {
 
 button {
     touch-action: manipulation;
+}
+/* КНОПКИ ОФОРМЛЕНИЯ ЗАКАЗА */
+.submit-order.whatsapp {
+    background: #25D366;
+    color: white;
+    border: none;
+}
+
+.submit-order.telegram {
+    background: #0088cc;
+    color: white;
+    border: none;
+}
+
+.submit-order.whatsapp:hover {
+    background: #1da851;
+}
+
+.submit-order.telegram:hover {
+    background: #0077b3;
 }
