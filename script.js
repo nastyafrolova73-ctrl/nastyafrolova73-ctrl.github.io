@@ -208,27 +208,16 @@ function getOrderData() {
 function submitTelegram() {
     console.log("🟢 Telegram кнопка нажата!");
     
-    // БЛОКИРУЕМ КНОПКУ, ЧТОБЫ НЕЛЬЗЯ БЫЛО НАЖАТЬ ДВАЖДЫ
-    const btn = document.querySelector('[onclick="submitTelegram()"]');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = "⏳ Отправка...";
-        btn.style.opacity = "0.7";
+    // ✅ ПРОВЕРКА ПЕРЕД ОТПРАВКОЙ
+    if (!checkFormBeforeSubmit()) {
+        return;
     }
     
     const data = getOrderData();
-    if (!data) {
-        // Разблокируем кнопку, если ошибка
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = "✈️ Оформить заказ";
-            btn.style.opacity = "1";
-        }
-        return;
-    }
+    if (!data) return;
 
     const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8";
-    const chatId = "-1004379777197"; // ← ТВОЙ ID (ЗАМЕНИ!)
+    const chatId = "-1004379777197"; // ← ЗАМЕНИ НА СВОЙ ID!
     const workerUrl = 'https://more125.nastyafrolova73.workers.dev';
     const url = `${workerUrl}/bot${botToken}/sendMessage`;
 
@@ -258,14 +247,6 @@ function submitTelegram() {
     .catch(error => {
         console.error('❌ Ошибка:', error);
         showMessage(`❌ Ошибка отправки! Попробуйте ещё раз.`);
-    })
-    .finally(() => {
-        // РАЗБЛОКИРУЕМ КНОПКУ
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = "✈️ Оформить заказ";
-            btn.style.opacity = "1";
-        }
     });
 }
 
@@ -415,24 +396,33 @@ function setupModals() {
     const cartModal = document.getElementById("cartModal");
     const adminPanel = document.getElementById("adminPanel");
 
+    // Открытие корзины
     document.getElementById("openCartBtn").onclick = () => {
         renderCartModal();
         cartModal.style.display = "flex";
+
+        // ✅ Просто вызываем проверку один раз при открытии
+        checkAllFields();
+        
+        // ✅ И включаем слежение за полями
+        setupValidation();
     };
+    
     document.getElementById("closeModalBtn").onclick = () => cartModal.style.display = "none";
 
+    // Открытие админ-панели
     document.getElementById("openAdminBtn").onclick = () => {
         renderAdminPanel();
         adminPanel.style.display = "flex";
     };
     document.getElementById("closeAdminBtn").onclick = () => adminPanel.style.display = "none";
 
+    // Закрытие по клику вне окна
     window.onclick = (e) => {
         if (e.target === cartModal) cartModal.style.display = "none";
         if (e.target === adminPanel) adminPanel.style.display = "none";
     };
 
-    document.getElementById("submitOrderBtn").onclick = submitOrder;
     document.getElementById("addProductBtn").onclick = addNewProduct;
 }
 
@@ -442,6 +432,175 @@ function init() {
     renderCatalog();
     setupTabs();
     setupModals();
+    setupValidation();
+    checkAllFields();     // ← ЭТО ДОЛЖНО БЫТЬ
+      // ← ЭТО ДОЛЖНО БЫТЬ (блокирует кнопки с самого начала)
+}
+// ==================== ВАЛИДАЦИЯ ПОЛЕЙ ЗАКАЗА ====================
+
+function validateField(field) {
+    if (!field) return false;
+    
+    const errorElement = document.getElementById(field.id + 'Error');
+    
+    // Сбрасываем классы
+    field.classList.remove('error', 'success');
+    if (errorElement) {
+        errorElement.classList.remove('visible');
+        errorElement.textContent = '';
+    }
+    
+    let isValid = true;
+    let errorText = '';
+    
+    // ===== ПРОВЕРКА ИМЕНИ =====
+    if (field.id === 'userName') {
+        const value = field.value.trim();
+        const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s\-]+$/;
+        if (!value) {
+            isValid = false;
+            errorText = '❌ Введите имя';
+        } else if (!nameRegex.test(value)) {
+            isValid = false;
+            errorText = '❌ Только буквы, пробелы и дефис';
+        }
+    }
+    
+    // ===== ПРОВЕРКА ТЕЛЕФОНА (С АВТО-ДОБАВЛЕНИЕМ +7) =====
+    if (field.id === 'userPhone') {
+        let value = field.value.trim();
+        
+        // Если поле пустое или только +7 — считаем невалидным
+        if (value === '' || value === '+' || value === '+7' || value === '+7 ') {
+            field.value = '+7';
+            const len = field.value.length;
+            field.setSelectionRange(len, len);
+            isValid = false;
+            errorText = '❌ Введите номер телефона';
+        } else {
+            // Очищаем от лишних символов
+            let cleaned = value.replace(/[^\d+]/g, '');
+            
+            // Оставляем + только в начале
+            if (cleaned.startsWith('+')) {
+                cleaned = '+' + cleaned.replace(/\+/g, '');
+            } else {
+                cleaned = cleaned.replace(/\+/g, '');
+            }
+            
+            // Если номер не начинается с +7, исправляем
+            if (!cleaned.startsWith('+7')) {
+                if (cleaned.startsWith('8')) {
+                    cleaned = '+7' + cleaned.slice(1);
+                } else if (cleaned.startsWith('7')) {
+                    cleaned = '+7' + cleaned.slice(1);
+                } else if (cleaned.startsWith('+')) {
+                    // Оставляем как есть
+                } else {
+                    cleaned = '+7' + cleaned;
+                }
+            }
+            
+            // Ограничиваем длину (максимум 12 символов: +7 + 10 цифр)
+            const maxLength = 12;
+            if (cleaned.length > maxLength) {
+                cleaned = cleaned.slice(0, maxLength);
+            }
+            
+            // Обновляем поле, если изменилось
+            if (field.value !== cleaned) {
+                field.value = cleaned;
+                const len = cleaned.length;
+                field.setSelectionRange(len, len);
+            }
+            
+            // Проверяем, что после +7 есть 10 цифр
+            const digitsAfter7 = cleaned.slice(2).replace(/\D/g, '');
+            if (digitsAfter7.length >= 10) {
+                isValid = true;
+            } else {
+                isValid = false;
+                errorText = `❌ Нужно ещё ${10 - digitsAfter7.length} цифр`;
+            }
+        }
+    }
+    
+    // ===== ПРОВЕРКА АДРЕСА =====
+    if (field.id === 'userAddress') {
+        const value = field.value.trim();
+        if (!value) {
+            isValid = false;
+            errorText = '❌ Введите адрес';
+        } else if (value.length < 3) {
+            isValid = false;
+            errorText = '❌ Минимум 3 символа';
+        }
+    }
+    
+    // Применяем стили
+    if (!isValid) {
+        field.classList.add('error');
+        if (errorElement) {
+            errorElement.textContent = errorText;
+            errorElement.classList.add('visible');
+        }
+    } else {
+        field.classList.add('success');
+    }
+    
+    return isValid;
+}
+
+function checkAllFields() {
+    const name = document.getElementById('userName');
+    const phone = document.getElementById('userPhone');
+    const address = document.getElementById('userAddress');
+    
+    if (!name || !phone || !address) return false;
+    
+    const isNameValid = validateField(name);
+    const isPhoneValid = validateField(phone);
+    const isAddressValid = validateField(address);
+    
+    const allValid = isNameValid && isPhoneValid && isAddressValid;
+    
+    const btns = document.querySelectorAll('.submit-order');
+    btns.forEach(btn => {
+        btn.disabled = !allValid;
+        btn.style.opacity = allValid ? '1' : '0.5';
+        btn.style.cursor = allValid ? 'pointer' : 'not-allowed';
+    });
+    
+    return allValid;
+}
+
+function setupValidation() {
+    const fields = ['userName', 'userPhone', 'userAddress'];
+    fields.forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        // Убираем старые обработчики, чтобы не было дублей
+        field.removeEventListener('input', checkAllFields);
+        field.removeEventListener('blur', checkAllFields);
+        // Добавляем новые
+        field.addEventListener('input', checkAllFields);
+        field.addEventListener('blur', checkAllFields);
+// ✅ ДОБАВЬ ОБРАБОТКУ ВСТАВКИ ДЛЯ ТЕЛЕФОНА
+        if (id === 'userPhone') {
+            field.addEventListener('paste', function() {
+                setTimeout(checkAllFields, 50);
+            });
+        }
+    });
+}
+
+function checkFormBeforeSubmit() {
+    const allValid = checkAllFields();
+    if (!allValid) {
+        showMessage('❌ Заполните все поля правильно!');
+        return false;
+    }
+    return true;
 }
 
 init();
