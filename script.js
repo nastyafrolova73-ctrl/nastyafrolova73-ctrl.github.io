@@ -445,3 +445,28 @@ function init() {
 }
 
 init();
+// ==================== ПИНГ ДЛЯ WORKER ====================
+function pingWorker() {
+    const workerUrl = 'https://telegram-proxy.nastyafrolova73.workers.dev';
+    
+    fetch(workerUrl, {
+        method: 'GET',
+        cache: 'no-cache'
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('✅ Пинг успешен! Worker отвечает.');
+        } else {
+            console.warn('⚠️ Worker ответил с ошибкой:', response.status);
+        }
+    })
+    .catch(error => {
+        console.warn('⚠️ Worker не отвечает:', error.message);
+    });
+}
+
+// Пингуем сразу при загрузке страницы
+pingWorker();
+
+// И каждые 3 минуты (180000 мс), чтобы Worker не засыпал
+setInterval(pingWorker, 180000);
