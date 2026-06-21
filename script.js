@@ -15,13 +15,46 @@ let products = [
     mainImage: "img/krab.jpg",
     extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
     },
+    { 
+    id: 2,  
+    name: "Краб камчатский",
+    desc: "Свежий охлажденный размер M",
+    price: 2500,
+    unit: "кг",
+    category: "seafood",
+    mainImage: "img/krab.jpg",
+    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    },
+    { 
+    id: 3, 
+    name: "Краб камчатский",
+    desc: "Свежий охлажденный размер XL",
+    price: 3000,
+    unit: "кг",
+    category: "seafood",
+    mainImage: "img/krab.jpg",
+    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    },
+    { 
+    id: 4,
+    name: "Креветка северная",
+    desc: "Свежий охлажденный размер S",
+    price: 2000,
+    unit: "кг",
+    category: "seafood",
+    mainImage: "img/krab.jpg",
+    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    },
    
     
 
     // ===== РЫБА =====
     { 
-        id: 2, name: "Филе семги", desc: "Норвежская, слабосоленая", 
-        price: 2100, unit: "кг", category: "fish",
+        id: 5, name: "Филе семги",
+        desc: "Норвежская, слабосоленая", 
+        price: 2100, 
+        unit: "кг", 
+        category: "fish",
         mainImage: "🐟",
         extraImages: ["🐟🍋", "🐟🧂", "🐟🔥"]
     },
@@ -29,8 +62,11 @@ let products = [
     
     // ===== МЯСО =====
     { 
-        id: 3, name: "Мраморная говядина", desc: "Рибай, мраморность 5+", 
-        price: 4200, unit: "кг", category: "meat",
+        id: 6, name: "Мраморная говядина", 
+        desc: "Рибай, мраморность 5+", 
+        price: 4200, 
+        unit: "кг", 
+        category: "meat",
         mainImage: "🥩",
         extraImages: ["🥩🔥", "🥩🧂", "🥩🍷"]
     },
@@ -179,7 +215,9 @@ function submitTelegram() {
     const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8"; // ← ТОКЕН БОТА
     const chatId = "-1004379777197"; // ← ТВОЙ ID В TELEGRAM
 
-    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    // СТАЛО (запрос через твой Worker):
+    const workerUrl = 'https://more125.nastyafrolova73.workers.dev'; // ← ТВОЙ АДРЕС
+    const url = `${workerUrl}/bot${botToken}/sendMessage`;
     
     fetch(url, {
         method: 'POST',
