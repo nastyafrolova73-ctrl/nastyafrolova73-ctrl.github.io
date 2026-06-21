@@ -493,3 +493,41 @@ button {
 .submit-order.telegram:hover {
     background: #0077b3;
 }
+/* ===== ВАЛИДАЦИЯ ПОЛЕЙ ===== */
+.order-form input {
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.order-form input:focus {
+    outline: none;
+    border-color: #0f5e7e;
+    box-shadow: 0 0 0 3px rgba(15, 94, 126, 0.15);
+}
+
+.order-form input.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.order-form input.success {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+}
+
+.order-form .error-message {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: none;
+    padding-left: 4px;
+}
+
+.order-form .error-message.visible {
+    display: block;
+}
+
+/* Блокировка кнопок при ошибках */
+.submit-order:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
