@@ -229,7 +229,7 @@ function submitTelegram() {
 
     const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8";
     const chatId = "-1004379777197"; // ← ТВОЙ ID (ЗАМЕНИ!)
-    const workerUrl = 'https://telegram-proxy.nastyafrolova73.workers.dev';
+    const workerUrl = 'https://more125.nastyafrolova73.workers.dev';
     const url = `${workerUrl}/bot${botToken}/sendMessage`;
 
     showMessage("⏳ Отправка заказа...");
@@ -447,7 +447,7 @@ function init() {
 init();
 // ==================== ПИНГ ДЛЯ WORKER ====================
 function pingWorker() {
-    const workerUrl = 'https://telegram-proxy.nastyafrolova73.workers.dev';
+    const workerUrl = 'https://more125.nastyafrolova73.workers.dev';
     
     fetch(workerUrl, {
         method: 'GET',
