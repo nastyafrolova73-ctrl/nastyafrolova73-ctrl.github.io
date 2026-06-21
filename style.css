@@ -531,3 +531,12 @@ button {
     opacity: 0.5;
     cursor: not-allowed;
 }
+/* Анимация загрузки при проверке адреса */
+.order-form input.loading {
+    border-color: #f59e0b !important;
+    background-color: #fffbeb !important;
+}
+
+.order-form .error-message.loading {
+    color: #f59e0b !important;
+}
