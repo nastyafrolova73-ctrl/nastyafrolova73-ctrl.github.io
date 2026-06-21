@@ -72,10 +72,15 @@
         <div id="cartTotal" class="cart-total"></div>
         
         <div class="order-form">
-            <input type="text" id="userName" placeholder="Ваше имя">
-            <input type="tel" id="userPhone" placeholder="Номер телефона">
-            <input type="text" id="userAddress" placeholder="Адрес доставки">
-            
+    <input type="text" id="userName" placeholder="Имя" autocomplete="name">
+    <div class="error-message" id="userNameError">❌ Только буквы, пробелы и дефис</div>
+    
+    <input type="tel" id="userPhone" placeholder="Телефон" inputmode="numeric" autocomplete="tel">
+    <div class="error-message" id="userPhoneError">❌ Только цифры (от 10 до 15 знаков)</div>
+    
+    <input type="text" id="userAddress" placeholder="Адрес доставки" autocomplete="address-level2">
+    <div class="error-message" id="userAddressError">❌ Минимум 3 символа</div>
+    
             <!-- ДВЕ КНОПКИ (onclick-версия) -->
             <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
     
