@@ -205,20 +205,35 @@ function getOrderData() {
     return { name, phone, address, total, orderText };
 }
 
-// ОТПРАВКА В TELEGRAM
 function submitTelegram() {
     console.log("🟢 Telegram кнопка нажата!");
-    const data = getOrderData();
-    if (!data) return;
-
-    // ⚙️ НАСТРОЙКИ TELEGRAM (ЗАМЕНИ НА СВОИ!)
-    const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8"; // ← ТОКЕН БОТА
-    const chatId = "-1004379777197"; // ← ТВОЙ ID В TELEGRAM
-
-    // СТАЛО (запрос через твой Worker):
-    const workerUrl = 'https://more125.nastyafrolova73.workers.dev'; // ← ТВОЙ АДРЕС
-    const url = `${workerUrl}/bot${botToken}/sendMessage`;
     
+    // БЛОКИРУЕМ КНОПКУ, ЧТОБЫ НЕЛЬЗЯ БЫЛО НАЖАТЬ ДВАЖДЫ
+    const btn = document.querySelector('[onclick="submitTelegram()"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Отправка...";
+        btn.style.opacity = "0.7";
+    }
+    
+    const data = getOrderData();
+    if (!data) {
+        // Разблокируем кнопку, если ошибка
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "✈️ Оформить заказ";
+            btn.style.opacity = "1";
+        }
+        return;
+    }
+
+    const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8";
+    const chatId = "-1004379777197"; // ← ТВОЙ ID (ЗАМЕНИ!)
+    const workerUrl = 'https://telegram-proxy.nastyafrolova73.workers.dev';
+    const url = `${workerUrl}/bot${botToken}/sendMessage`;
+
+    showMessage("⏳ Отправка заказа...");
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -241,8 +256,16 @@ function submitTelegram() {
         }
     })
     .catch(error => {
-        showMessage(`❌ Ошибка отправки в Telegram!`);
-        console.error('Ошибка:', error);
+        console.error('❌ Ошибка:', error);
+        showMessage(`❌ Ошибка отправки! Попробуйте ещё раз.`);
+    })
+    .finally(() => {
+        // РАЗБЛОКИРУЕМ КНОПКУ
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "✈️ Оформить заказ";
+            btn.style.opacity = "1";
+        }
     });
 }
 
