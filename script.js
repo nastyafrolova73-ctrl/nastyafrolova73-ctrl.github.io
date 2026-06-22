@@ -736,8 +736,6 @@ function validateAddressWithDadata(field) {
             });
     }, 5000);
 }
-
-init();
 // ==================== ПИНГ ДЛЯ WORKER ====================
 function pingWorker() {
     const workerUrl = 'https://more125.nastyafrolova73.workers.dev';
@@ -763,3 +761,6 @@ pingWorker();
 
 // И каждые 3 минуты (180000 мс), чтобы Worker не засыпал
 setInterval(pingWorker, 180000);
+
+init();
+
