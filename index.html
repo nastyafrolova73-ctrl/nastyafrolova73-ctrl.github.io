@@ -81,10 +81,11 @@
     <input type="text" id="userAddress" placeholder="Адрес доставки" autocomplete="address-level2">
     <div class="error-message" id="userAddressError">❌ Минимум 3 символа</div>
     
-            <!-- ДВЕ КНОПКИ (onclick-версия) -->
-            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-    
-                <button class="submit-order" style="flex: 1; min-width: 120px; background: #0088cc; color: white; border: none; padding: 14px; border-radius: 50px; font-weight: bold; cursor: pointer;" onclick="submitTelegram()">✈️ Оформить заказ</button>
+          
+            <!-- ВМЕСТО ВСЕХ КНОПОК, ОСТАВЬ ЭТУ: -->
+<button class="submit-order" 
+style="width: 100%; background: #0f5e7e; color: white; border: none; padding: 14px; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 14px;" 
+onclick="submitOrder()">✅ Оформить заказ</button>
             </div>
         </div>
     </div>
