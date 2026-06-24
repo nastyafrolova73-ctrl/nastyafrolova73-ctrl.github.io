@@ -171,7 +171,7 @@ function renderCartModal() {
 }
 // ==================== ОФОРМЛЕНИЕ ЗАКАЗА ====================
 
-// Функция для сбора данных заказа
+// ==================== ПОЛУЧЕНИЕ ДАННЫХ ЗАКАЗА ====================
 function getOrderData() {
     const name = document.getElementById("userName").value.trim();
     const phone = document.getElementById("userPhone").value.trim();
@@ -193,7 +193,7 @@ function getOrderData() {
     orderText += `📞 Телефон: ${phone}\n`;
     orderText += `🏠 Адрес: ${address}\n`;
     orderText += `📅 Время: ${new Date().toLocaleString()}\n\n`;
-    orderText += `📦 Товары:\n`;
+    orderText += "📦 Товары:\n";
     
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
@@ -205,52 +205,115 @@ function getOrderData() {
     return { name, phone, address, total, orderText };
 }
 
-function submitTelegram() {
-    console.log("🟢 Telegram кнопка нажата!");
-    
-    // ✅ ПРОВЕРКА ПЕРЕД ОТПРАВКОЙ
-    if (!checkFormBeforeSubmit()) {
-        return;
-    }
+// ==================== ОТПРАВКА ЗАКАЗА ====================
+
+// Адрес твоего Worker
+const WORKER_URL = 'https://more125.nastyafrolova73.workers.dev';
+
+
+function sendToTelegram(message) {
+    return fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: 'telegram',
+            botToken: '8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8',
+            chatId: '-1004379777197',
+            message: message
+        })
+    })
+    .then(res => res.json());
+}
+
+
+function sendToVK(message) {
+    return fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: 'vk',
+            vkToken: 'vk1.a.kr1MWaQsceRPZqKOASfof1Qejz_hhSdLq2Du9-peDuf6ERDVH89_-L-dOy8U5onuqxeg0ZIWjq9qj1yncaolvqrUaEHWa4McS1QUClIrDY2RbalmpeQFpME2tRJIVTMrwlC8TK0q9b-Av0RNRspFJV3NoQptSTDN7Ei5PM1gp9O04nSuZfgLoqLFh99qdUwab6oeOAml9-iOGoIJMRD2xg',
+            peerId: '2000000001',
+            message: message
+        })
+    })
+    .then(res => res.json());
+}
+
+// ===== ОФОРМЛЕНИЕ ЗАКАЗА =====
+function submitOrder() {
+    console.log("🟢 Оформление заказа");
     
     const data = getOrderData();
     if (!data) return;
-
-    const botToken = "8723417325:AAHlG4832Nypw0xmp2GOLbaZ90WfqB_Hav8";
-    const chatId = "-1004379777197"; // ← ЗАМЕНИ НА СВОЙ ID!
-    const workerUrl = 'https://more125.nastyafrolova73.workers.dev';
-    const url = `${workerUrl}/bot${botToken}/sendMessage`;
-
+    
     showMessage("⏳ Отправка заказа...");
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            chat_id: chatId,
-            text: data.orderText,
-            parse_mode: 'Markdown'
-        })
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.ok) {
-            showMessage(`✅ ${data.name}, заказ отправлен в Telegram!`);
-            clearCartAndForm();
-        } else {
-            showMessage(`❌ Ошибка: ${result.description}`);
-            console.error('Ошибка Telegram:', result);
-        }
-    })
-    .catch(error => {
-        console.error('❌ Ошибка:', error);
-        showMessage(`❌ Ошибка отправки! Попробуйте ещё раз.`);
+    
+    const btns = document.querySelectorAll('.submit-order');
+    btns.forEach(btn => {
+        btn.disabled = true;
+        btn.textContent = '⏳ Отправка...';
+        btn.style.opacity = '0.5';
     });
+    
+    let results = [];
+    let errors = [];
+    
+    // ===== 1️⃣ TELEGRAM =====
+    sendToTelegram(data.orderText)
+        .then(result => {
+            if (result.ok) {
+                results.push('✅ Telegram');
+                console.log('✅ Telegram: OK');
+            } else {
+                errors.push('❌ Telegram: ' + (result.description || 'ошибка'));
+                console.error('Telegram ошибка:', result);
+            }
+        })
+        .catch(err => {
+            errors.push('❌ Telegram: ' + err.message);
+            console.error('Telegram fetch error:', err);
+        });
+    
+    // ===== 2️⃣ VK =====
+    sendToVK(data.orderText)
+        .then(result => {
+            if (result.ok) {
+                results.push('✅ VK');
+                console.log('✅ VK: OK');
+            } else if (result.error) {
+                const errorMsg = result.error.error_msg || 'ошибка API';
+                errors.push('❌ VK: ' + errorMsg);
+                console.error('VK ошибка:', result.error);
+            } else {
+                errors.push('❌ VK: неизвестная ошибка');
+            }
+        })
+        .catch(err => {
+            errors.push('❌ VK: ' + err.message);
+            console.error('VK fetch error:', err);
+        });
+    
+    // Ждём 5 секунд
+    setTimeout(() => {
+        btns.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = '✅ Оформить заказ';
+            btn.style.opacity = '1';
+        });
+        
+        if (results.length === 2) {
+            showMessage(`✅ ${data.name}, заказ отправлен! Ожидайте звонка`);
+            clearCartAndForm();
+        } else if (results.length === 1) {
+            showMessage(`⚠️ Частичная отправка: ${results.join(', ')} | ${errors.join(', ')}`);
+        } else {
+            showMessage(`❌ Ошибка отправки: ${errors.join(', ')}`);
+        }
+    }, 2500);
 }
 
-// Очистка корзины и формы
+// ==================== ОЧИСТКА КОРЗИНЫ ====================
 function clearCartAndForm() {
     cart = [];
     saveCart();
@@ -260,7 +323,6 @@ function clearCartAndForm() {
     document.getElementById("userPhone").value = "";
     document.getElementById("userAddress").value = "";
 }
-
 // ==================== ОТРИСОВКА КАТАЛОГА С ГАЛЕРЕЕЙ ====================
 
 function renderCatalog() {
@@ -763,4 +825,3 @@ pingWorker();
 setInterval(pingWorker, 180000);
 
 init();
-
