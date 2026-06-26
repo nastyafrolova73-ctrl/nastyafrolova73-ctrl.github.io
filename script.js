@@ -8,43 +8,54 @@ let products = [
     { 
     id: 1,  // ВАЖНО: следующий номер!
     name: "Краб камчатский",
-    desc: "Свежий охлажденный размер S",
+    desc: "Свежий охлажденный размер S-M",
     price: 2000,
     unit: "кг",
     category: "seafood",
-    mainImage: "img/krab.jpg",
-    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    mainImage: "img/krab2.jpg",
+    extraImages: []
     },
     { 
-    id: 2,  
-    name: "Краб камчатский",
-    desc: "Свежий охлажденный размер M",
-    price: 2500,
+    id: 2,
+    name: "Креветка северная",
+    desc: "Свежая охлажденная",
+    price: 2300,
     unit: "кг",
     category: "seafood",
-    mainImage: "img/krab.jpg",
-    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    mainImage: "img/krev12.jpg",
+    extraImages: []
     },
     { 
-    id: 3, 
-    name: "Краб камчатский",
-    desc: "Свежий охлажденный размер XL",
-    price: 3000,
+    id: 3,
+    name: "Гребешок",
+    desc: "Свежий в раковине доставка от 3кг",
+    price: 1000,
     unit: "кг",
     category: "seafood",
-    mainImage: "img/krab.jpg",
-    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    mainImage: "img/grebrak.jpg",
+    extraImages: []
     },
     { 
     id: 4,
-    name: "Креветка северная",
-    desc: "Свежий охлажденный размер S",
-    price: 2000,
+    name: "Гребешок чищенный",
+    desc: "Свежий охлажденный ",
+    price: 3000,
     unit: "кг",
     category: "seafood",
-    mainImage: "img/krab.jpg",
-    extraImages: ["🦐🔥", "🦐🍋", "🦐🧈"]
+    mainImage: "img/grebchin.jpg",
+    extraImages: []
     },
+    { 
+    id: 5,
+    name: "Гребешок чищенный",
+    desc: "Свежий охлажденный ",
+    price: 3000,
+    unit: "кг",
+    category: "seafood",
+    mainImage: "img/ikra.jpg",
+    extraImages: []
+    },
+    
    
     
 
@@ -796,7 +807,7 @@ function validateAddressWithDadata(field) {
                 }
                 checkAllFields();
             });
-    }, 5000);
+    }, 100);
 }
 // ==================== ПИНГ ДЛЯ WORKER ====================
 function pingWorker() {
