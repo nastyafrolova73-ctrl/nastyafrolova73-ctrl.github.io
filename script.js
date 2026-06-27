@@ -319,7 +319,7 @@ function submitOrder() {
         } else if (results.length === 1) {
             showMessage(`⚠️ Частичная отправка: ${results.join(', ')} | ${errors.join(', ')}`);
         } else {
-            showMessage(`❌ Ошибка отправки: ${errors.join(', ')}`);
+            showMessage(`❌ Ошибка отправки:«Попробуйте включить VPN» ${errors.join(', ')}`);
         }
     }, 2500);
 }
