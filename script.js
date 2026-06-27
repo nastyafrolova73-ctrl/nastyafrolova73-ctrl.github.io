@@ -47,9 +47,9 @@ let products = [
     },
     { 
     id: 5,
-    name: "Гребешок чищенный",
-    desc: "Свежий охлажденный ",
-    price: 3000,
+    name: "Икра горбуши",
+    desc: "Свежемороженая Баночка по 0.5",
+    price: 7500,
     unit: "кг",
     category: "seafood",
     mainImage: "img/ikra.jpg",
