@@ -672,7 +672,7 @@ function checkFormBeforeSubmit() {
 // ==================== ПРОВЕРКА АДРЕСА ЧЕРЕЗ DADATA ====================
 
 // ТВОЙ API-КЛЮЧ (получи на dadata.ru)
-const DADATA_API_KEY = 'c27968683b961cb6baa6d0523b20da6ec8b56321'; // ← ЗАМЕНИ НА СВОЙ!
+const DADATA_API_KEY = ''; // ← ЗАМЕНИ НА СВОЙ!
 
 // Проверка адреса через DaData
 function checkAddress(address) {
