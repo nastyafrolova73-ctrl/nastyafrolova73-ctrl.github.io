@@ -270,7 +270,23 @@ function submitOrder() {
     let results = [];
     let errors = [];
     
-    // ===== 1️⃣ TELEGRAM =====
+    // ===== 1️⃣ СНАЧАЛА VK (самый надёжный) =====
+    sendToVK(data.orderText)
+        .then(result => {
+            if (result.ok) {
+                results.push('✅ VK');
+                console.log('✅ VK: OK');
+            } else {
+                errors.push('❌ VK: ' + (result.error?.error_msg || 'ошибка'));
+                console.error('VK ошибка:', result);
+            }
+        })
+        .catch(err => {
+            errors.push('❌ VK: ' + err.message);
+            console.error('VK fetch error:', err);
+        });
+    
+    // ===== 2️⃣ ПОТОМ TELEGRAM (запасной) =====
     sendToTelegram(data.orderText)
         .then(result => {
             if (result.ok) {
@@ -286,26 +302,6 @@ function submitOrder() {
             console.error('Telegram fetch error:', err);
         });
     
-    // ===== 2️⃣ VK =====
-    sendToVK(data.orderText)
-        .then(result => {
-            if (result.ok) {
-                results.push('✅ VK');
-                console.log('✅ VK: OK');
-            } else if (result.error) {
-                const errorMsg = result.error.error_msg || 'ошибка API';
-                errors.push('❌ VK: ' + errorMsg);
-                console.error('VK ошибка:', result.error);
-            } else {
-                errors.push('❌ VK: неизвестная ошибка');
-            }
-        })
-        .catch(err => {
-            errors.push('❌ VK: ' + err.message);
-            console.error('VK fetch error:', err);
-        });
-    
-    // Ждём 5 секунд
     setTimeout(() => {
         btns.forEach(btn => {
             btn.disabled = false;
@@ -313,11 +309,9 @@ function submitOrder() {
             btn.style.opacity = '1';
         });
         
-        if (results.length === 2) {
-            showMessage(`✅ ${data.name}, заказ отправлен! Ожидайте звонка`);
+        if (results.length >= 1) {
+            showMessage(`✅ ${data.name}, заказ отправлен! (${results.join(', ')})`);
             clearCartAndForm();
-        } else if (results.length === 1) {
-            showMessage(`⚠️ Частичная отправка: ${results.join(', ')} | ${errors.join(', ')}`);
         } else {
             showMessage(`❌ Ошибка отправки:«Попробуйте включить VPN» ${errors.join(', ')}`);
         }
