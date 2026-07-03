@@ -59,28 +59,6 @@ let products = [
    
     
 
-    // ===== РЫБА =====
-    { 
-        id: 5, name: "Филе семги",
-        desc: "Норвежская, слабосоленая", 
-        price: 2100, 
-        unit: "кг", 
-        category: "fish",
-        mainImage: "🐟",
-        extraImages: ["🐟🍋", "🐟🧂", "🐟🔥"]
-    },
-
-    
-    // ===== МЯСО =====
-    { 
-        id: 6, name: "Мраморная говядина", 
-        desc: "Рибай, мраморность 5+", 
-        price: 4200, 
-        unit: "кг", 
-        category: "meat",
-        mainImage: "🥩",
-        extraImages: ["🥩🔥", "🥩🧂", "🥩🍷"]
-    },
 
 ];
 
