@@ -55,7 +55,16 @@ let products = [
     mainImage: "img/ikra.jpg",
     extraImages: []
     },
-    
+        // ===== РЫБА =====
+    { 
+        id: 6, name: "Филе Нерки",
+        desc: "Слабосолёная, Холодного копчения, Охлажденная", 
+        price: 2500, 
+        unit: "кг", 
+        category: "fish",
+        mainImage: "img/riba.jpg",
+        extraImages: []
+    },
    
     
 
