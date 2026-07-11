@@ -39,7 +39,7 @@ let products = [
     id: 4,
     name: "Гребешок чищенный",
     desc: "Свежий охлажденный ",
-    price: 3000,
+    price: 3500,
     unit: "кг",
     category: "seafood",
     mainImage: "img/grebchin.jpg",
