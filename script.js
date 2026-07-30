@@ -49,8 +49,8 @@ let products = [
     id: 5,
     name: "Икра горбуши",
     desc: "Свежемороженая Баночка по 0.5",
-    price: 7500,
-    unit: "кг",
+    price: 3750,
+    unit: "500гр",
     category: "seafood",
     mainImage: "img/ikra.jpg",
     extraImages: []
