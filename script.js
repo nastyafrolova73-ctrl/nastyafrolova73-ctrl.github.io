@@ -9,7 +9,7 @@ let products = [
     id: 1,  // ВАЖНО: следующий номер!
     name: "Краб камчатский",
     desc: "Свежий охлажденный размер S-M",
-    price: 2000,
+    price: 2300,
     unit: "кг",
     category: "seafood",
     mainImage: "img/krab2.jpg",
