@@ -809,6 +809,67 @@ function pingWorker() {
         console.warn('⚠️ Worker не отвечает:', error.message);
     });
 }
+    // ==================== ОТПРАВКА ЧЕРЕЗ SMS ====================
+function submitSMS() {
+    console.log("🟢 SMS кнопка нажата!");
+    
+    // Проверяем, заполнены ли поля
+    const name = document.getElementById("userName").value.trim();
+    const phone = document.getElementById("userPhone").value.trim();
+    const address = document.getElementById("userAddress").value.trim();
+    
+    if (!name || !phone || !address) {
+        showMessage("❌ Заполните все поля!");
+        return;
+    }
+    
+    if (cart.length === 0) {
+        showMessage("🛑 Корзина пуста!");
+        return;
+    }
+    
+    // Формируем текст заказа
+    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    
+    let message = "🦞 НОВЫЙ ЗАКАЗ!\n\n";
+    message += `👤 Имя: ${name}\n`;
+    message += `📞 Телефон: ${phone}\n`;
+    message += `🏠 Адрес: ${address}\n`;
+    message += `📅 Время: ${new Date().toLocaleString()}\n\n`;
+    message += "📦 Товары:\n";
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        message += `${index + 1}. ${item.name} — ${item.quantity} кг × ${item.price} ₽ = ${itemTotal} ₽\n`;
+    });
+    
+    message += `\n💰 ИТОГО: ${total} ₽`;
+    
+    // ⚙️ ТВОЙ НОМЕР ТЕЛЕФОНА (для SMS)
+    const yourPhone = "79147384428"; // ← ЗАМЕНИ НА СВОЙ НОМЕР!
+    
+    // Кодируем сообщение для URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Создаём ссылку для SMS
+    // На телефонах открывается приложение SMS
+    const smsUrl = `sms:${yourPhone}?body=${encodedMessage}`;
+    
+    // Открываем SMS-приложение
+    window.location.href = smsUrl;
+    
+    showMessage(`✅ ${name}, откройте SMS и отправьте!`);
+    
+    // Очищаем корзину после отправки
+    cart = [];
+    saveCart();
+    renderCartModal();
+    document.getElementById("cartModal").style.display = "none";
+    document.getElementById("userName").value = "";
+    document.getElementById("userPhone").value = "";
+    document.getElementById("userAddress").value = "";
+}
+
 
 // Пингуем сразу при загрузке страницы
 pingWorker();
