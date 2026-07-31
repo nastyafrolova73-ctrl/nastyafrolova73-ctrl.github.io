@@ -555,3 +555,20 @@ button {
 .order-form .error-message.loading {
     color: #f59e0b !important;
 }
+/* Кнопка SMS */
+.submit-order.sms {
+    background: #f59e0b;
+    color: white;
+}
+
+.submit-order.sms:hover {
+    background: #d97706;
+}
+
+/* Для мобильных устройств — кнопки в одну строку */
+@media (max-width: 480px) {
+    .order-form .submit-order {
+        font-size: 0.9rem !important;
+        padding: 12px !important;
+    }
+}
