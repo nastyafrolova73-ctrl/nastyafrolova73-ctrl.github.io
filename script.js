@@ -47,9 +47,9 @@ let products = [
     },
     { 
     id: 5,
-    name: "Икра горбуши",
+    name: "Икра горбуши(НЕТ В НАЛИЧИИ)",
     desc: "Свежемороженая Баночка по 0.5",
-    price: Нет в наличии,
+    price: 3750,
     unit: "500гр",
     category: "seafood",
     mainImage: "img/ikra.jpg",
